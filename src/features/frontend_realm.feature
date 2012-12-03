@@ -14,7 +14,7 @@ Feature: Manage Frontend Realms
     When I follow "new_realm_button"
     Then I should be on the new frontend realm page
     When I fill in "frontend_realm_name" with "testrealm2"
-    And I press "Save"
+    And I press "Create Realm"
     Then I should see a confirmation message
 
   Scenario: Validate unique frontend realm name

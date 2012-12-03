@@ -6,10 +6,11 @@
     = link_to t('realms.edit.cancel_editing'), frontend_realm_path(@realm), :class => 'button pill danger', :id => 'new_user_button'
   %h1.realms= @title
 
-%section.content-section.realm
+%section.content-section
   %header
     %h2= t'realms.edit.properties'
 
   .content
-    = form_for @realm, :url => frontend_realm_path(@realm), :html => { :method => :put, :class => 'generic horizontal' } do |f|
+    = conductor_form_for @realm do |f|
       = render :partial => "form", :locals => { :form => f }
+      = f.button :form_buttons, :cancel => frontend_realms_path
