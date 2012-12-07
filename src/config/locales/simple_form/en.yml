@@ -10,6 +10,11 @@ en:
       # html: '<abbr title="required">*</abbr>'
     buttons:
       cancel: 'Cancel'
+    custom_inputs:
+      url_or_file_input:
+        url: URL
+        file: File
+        url_placeholder: 'http://'
     error_notification:
       default_message: 'Some errors prevented the %{model} from being saved. Please review the problems below.'
     # Labels and hints examples

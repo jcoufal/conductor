@@ -6,6 +6,7 @@ require File.join(Rails.root, 'lib', 'simple_form_extension', 'validation_messag
 # Custom inputs
 require File.join(Rails.root, 'lib', 'simple_form_extension', 'numeric_input_with_unlimited_check_box_input')
 require File.join(Rails.root, 'lib', 'simple_form_extension', 'informative_input')
+require File.join(Rails.root, 'lib', 'simple_form_extension', 'url_or_file_input')
 
 # Input overrides
 require File.join(Rails.root, 'lib', 'simple_form_extension', 'collection_check_boxes_input')
