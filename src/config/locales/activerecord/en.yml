@@ -91,6 +91,7 @@ en:
         xml_filename: "XML Filename"
         owner_id: "Owner"
         pool_family_id: "Pool Family"
+        edit_xml: "Edit XML"
       deployment:
         name: "Name"
         realm_id: "Provider Realm"

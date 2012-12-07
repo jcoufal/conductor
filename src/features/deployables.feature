@@ -17,7 +17,7 @@ Feature: Manage Catalog Entries
     When I fill in "deployable[name]" with "test1"
     And I fill in "deployable[description]" with "description"
     When I attach the file "features/upload_files/deployable.xml" to "deployable[xml]"
-    And I press "save_button"
+    And I press "Create Deployable"
     Then I should see a confirmation message
 
   Scenario: Change the name
@@ -28,7 +28,7 @@ Feature: Manage Catalog Entries
     And I follow "edit_button"
     Then I should be on the edit deployable page for "testdepl"
     When I fill in "deployable[name]" with "testdepl-renamed"
-    And I press "save_button"
+    And I press "Update Deployable"
     Then I should see a confirmation message
     And I should see "testdepl-renamed"
 

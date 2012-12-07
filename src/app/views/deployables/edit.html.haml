@@ -7,5 +7,14 @@
     %h2=t'catalog_entries.edit.editing_catalog_entry'
 
   .content
-    = form_for @deployable, :url => polymorphic_path([@catalog, @deployable]), :html => { :method => :put, :class => params[:edit_xml] ? "generic" : "generic horizontal" } do |f|
-      = render :partial => "form", :locals => { :form => f }
+    = conductor_form_for(@deployable, :url => catalog_deployable_path(@catalog, @deployable)) do |f|
+      - if params[:edit_xml]
+        = hidden_field_tag :edit_xml, true
+        = f.input :xml, :input_html => { :cols => "120" }
+      - else
+        = f.input :name
+        = f.input :description, :input_html => { :rows => 2 }
+        = f.input :xml, :as => :informative,
+                        :required => false,
+                        :text => link_to(t("deployables.properties.edit_deployable_xml"), edit_catalog_deployable_path(@catalog, @deployable, :edit_xml=>true))
+      = f.button :form_buttons, :cancel => catalog_deployable_path(@catalog, @deployable)

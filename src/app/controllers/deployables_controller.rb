@@ -124,11 +124,6 @@ class DeployablesController < ApplicationController
   end
 
   def create
-    if params[:cancel]
-      redirect_to polymorphic_path([params[:catalog_id], Deployable])
-      return
-    end
-
     @deployable = Deployable.new(params[:deployable])
     @selected_catalogs = Catalog.find(Array(params[:catalog_id]))
     @deployable.owner = current_user
@@ -136,13 +131,15 @@ class DeployablesController < ApplicationController
       require_privilege(Privilege::CREATE, Deployable, catalog)
     end
 
-    if params.has_key? :url
-      xml, error = import_xml_from_url(params[:url])
+    if params[:deployable].has_key?(:xml_url)
+      xml, error = import_xml_from_url(params[:deployable][:xml_url])
       unless xml.nil?
         #store xml_filename for url (i.e. url ends to: foo || foo.xml)
-        @deployable.xml_filename =  File.basename(URI.parse(params[:url]).path)
+        @deployable.xml_filename =  File.basename(URI.parse(params[:deployable][:xml_url]).path)
         @deployable.xml = xml
       end
+    elsif params[:deployable].has_key?(:xml_file)
+      @deployable.xml = params[:deployable][:xml_file]
     elsif params[:create_from_image].present?
       hw_profile = HardwareProfile.frontend.find(params[:hardware_profile])
       require_privilege(Privilege::VIEW, hw_profile)
@@ -157,7 +154,7 @@ class DeployablesController < ApplicationController
         end
         @deployable.save!
         flash[:notice] = t("catalog_entries.flash.notice.added", :catalog => @selected_catalogs.map{|c| c.name}.join(", "))
-        if params[:edit_xml]
+        if params[:deployable].has_key?(:edit_xml) && params[:deployable][:edit_xml] == '1'
           redirect_to edit_polymorphic_path([@selected_catalogs.first, @deployable], :edit_xml =>true)
         elsif params[:create_from_image]
           redirect_to @deployable

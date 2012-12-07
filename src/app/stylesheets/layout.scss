@@ -2457,6 +2457,60 @@ form.generic.horizontal{
   dd{ font-weight: normal; }
 }
 
+/* Custom SimpleForm input: double input
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+$second_label_width: 60px;
+
+.double_input {
+  & > .input {
+    span.label,
+    .label_radio {
+      display: inline-block;
+      width: $second_label_width;
+      margin-right: -4px; /* get rid fo annoying space between inline-blocks! */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: left;
+      float: none;
+
+      label {
+        display: inline-block;
+      }
+    }
+
+    span.label {
+      width: $second_label_width - 20px;
+    }
+
+    span.label,
+    span.or {
+      display: none;
+    }
+
+    .nested_input {
+      display: inline-block;
+
+      input {
+        width: $input_width - $second_label_width;
+      }
+    }
+
+    input[type="radio"] {
+      margin: 0 3px 0 0;
+      position: relative;
+      top: 2px;
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    & > .label {
+      margin-bottom: 5px;
+    }
+  }
+}
+
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Lists
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */

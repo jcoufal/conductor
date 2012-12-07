@@ -17,20 +17,13 @@
 require 'util/conductor'
 
 class Deployable < ActiveRecord::Base
+
   class << self
     include CommonFilterMethods
   end
-
-
   include PermissionedObject
 
-  validates_presence_of :name
-  validates_uniqueness_of :name
-  validates_length_of :name, :maximum => 1024
-
-  validates_presence_of :xml
-  validate :validate_deployable_xml, :if => Proc.new {|deployable|
-                                              !deployable.xml.blank? }
+  PRESET_FILTERS_OPTIONS = []
 
   has_many :permissions, :as => :permission_object, :dependent => :destroy,
            :include => [:role],
@@ -38,21 +31,28 @@ class Deployable < ActiveRecord::Base
   has_many :derived_permissions, :as => :permission_object, :dependent => :destroy,
            :include => [:role],
            :order => "derived_permissions.id ASC"
-
   has_many :catalog_entries, :dependent => :destroy
   has_many :catalogs, :through => :catalog_entries
   belongs_to :pool_family
-
   belongs_to :owner, :class_name => "User", :foreign_key => "owner_id"
-  after_create "assign_owner_roles(owner)"
-  before_create :set_pool_family
 
   scope :without_catalog, lambda {
     deployable_ids_in_association = CatalogEntry.select(:deployable_id).map(&:deployable_id)
     where('id NOT IN (?)', deployable_ids_in_association)
   }
 
-  PRESET_FILTERS_OPTIONS = []
+  attr_accessor :xml_url
+  attr_accessor :xml_file
+  attr_accessor :edit_xml
+
+  after_create "assign_owner_roles(owner)"
+  before_create :set_pool_family
+
+  validates :name, :presence => :true,
+                   :uniqueness => true,
+                   :length => { :within => 1..100 }
+  validates :xml, :presence => true
+  validate :validate_deployable_xml, :if => Proc.new { |deployable| !deployable.xml.blank? }
 
   def perm_ancestors
     super + catalogs + catalogs.collect{|c| c.pool}.uniq + [pool_family]
@@ -69,7 +69,7 @@ class Deployable < ActiveRecord::Base
       validate_cycles_in_deployable_xml(deployable_xml)
       validate_references_in_deployable_xml(deployable_xml)
     rescue Nokogiri::XML::SyntaxError => e
-      errors.add(:base, I18n.t("deployments.errors.not_valid_deployable_xml", :msg => "#{e.message}"))
+      errors.add(:xml, I18n.t("deployments.errors.not_valid_deployable_xml", :msg => "#{e.message}"))
     end
   end
 

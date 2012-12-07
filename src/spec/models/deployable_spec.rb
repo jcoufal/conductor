@@ -61,7 +61,7 @@ describe Deployable do
       deployable.name = invalid_name
       deployable.should_not be_valid
     end
-    deployable.name = 'x'*1024
+    deployable.name = 'x'*50
     deployable.should be_valid
   end
 
